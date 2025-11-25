@@ -1,0 +1,166 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum DigitalIdentityRegistry.Role",
+						"name": "role",
+						"type": "uint8"
+					}
+				],
+				"name": "UserRegistered",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "getUser",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "userAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "enum DigitalIdentityRegistry.Role",
+								"name": "role",
+								"type": "uint8"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "hashID",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bool",
+								"name": "isRegistered",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct DigitalIdentityRegistry.User",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_hashID",
+						"type": "bytes32"
+					}
+				],
+				"name": "registerDoctor",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_hashID",
+						"type": "bytes32"
+					}
+				],
+				"name": "registerPatient",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "users",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "enum DigitalIdentityRegistry.Role",
+						"name": "role",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "hashID",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bool",
+						"name": "isRegistered",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/DigitalIdentityRegistry.sol": "DigitalIdentityRegistry"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/DigitalIdentityRegistry.sol": {
+			"keccak256": "0xee5b26ae5b2f0a18ac9da2713c8c724cffd73d908ed627a54b9c40eb506edf9f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0a0aaee897b9da9e4a52ae2cee3d76b2425948c11ab25320c99ea640086800af",
+				"dweb:/ipfs/QmVsAgPRv5oZ4YQPofFtjn5A48nYxmXZpFQf12snyUbwyT"
+			]
+		}
+	},
+	"version": 1
+}
