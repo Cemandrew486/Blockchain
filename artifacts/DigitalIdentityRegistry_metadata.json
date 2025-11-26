@@ -6,10 +6,51 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_instituteResearcher",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_doctor",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "uint256",
+						"name": "internalId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "oldAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newAddress",
+						"type": "address"
+					}
+				],
+				"name": "UserAddressUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "address",
 						"name": "user",
 						"type": "address"
@@ -19,47 +60,25 @@
 						"internalType": "enum DigitalIdentityRegistry.Role",
 						"name": "role",
 						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "hashId",
+						"type": "bytes32"
 					}
 				],
 				"name": "UserRegistered",
 				"type": "event"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_addr",
-						"type": "address"
-					}
-				],
-				"name": "getUser",
+				"inputs": [],
+				"name": "doctor",
 				"outputs": [
 					{
-						"components": [
-							{
-								"internalType": "address",
-								"name": "userAddress",
-								"type": "address"
-							},
-							{
-								"internalType": "enum DigitalIdentityRegistry.Role",
-								"name": "role",
-								"type": "uint8"
-							},
-							{
-								"internalType": "bytes32",
-								"name": "hashID",
-								"type": "bytes32"
-							},
-							{
-								"internalType": "bool",
-								"name": "isRegistered",
-								"type": "bool"
-							}
-						],
-						"internalType": "struct DigitalIdentityRegistry.User",
+						"internalType": "address",
 						"name": "",
-						"type": "tuple"
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -68,8 +87,136 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getPatient",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "enum DigitalIdentityRegistry.Role",
+						"name": "role",
+						"type": "uint8"
+					},
+					{
 						"internalType": "bytes32",
-						"name": "_hashID",
+						"name": "hashId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bool",
+						"name": "isRegistered",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "internalId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getStaff",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "userAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "enum DigitalIdentityRegistry.Role",
+						"name": "role",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "hashId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bool",
+						"name": "isRegistered",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "internalId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "instituteResearcher",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "internalIdToAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "doctorAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "hashId",
 						"type": "bytes32"
 					}
 				],
@@ -81,12 +228,66 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "employeeAddress",
+						"type": "address"
+					},
+					{
 						"internalType": "bytes32",
-						"name": "_hashID",
+						"name": "hashId",
+						"type": "bytes32"
+					}
+				],
+				"name": "registerInsurance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "hashId",
 						"type": "bytes32"
 					}
 				],
 				"name": "registerPatient",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "researcherAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "hashId",
+						"type": "bytes32"
+					}
+				],
+				"name": "registerResearcher",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "internalId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "newAddress",
+						"type": "address"
+					}
+				],
+				"name": "updateUserAddress",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -102,6 +303,11 @@
 				"name": "users",
 				"outputs": [
 					{
+						"internalType": "uint256",
+						"name": "internalId",
+						"type": "uint256"
+					},
+					{
 						"internalType": "address",
 						"name": "userAddress",
 						"type": "address"
@@ -113,7 +319,7 @@
 					},
 					{
 						"internalType": "bytes32",
-						"name": "hashID",
+						"name": "hashId",
 						"type": "bytes32"
 					},
 					{
@@ -154,11 +360,11 @@
 	},
 	"sources": {
 		"contracts/DigitalIdentityRegistry.sol": {
-			"keccak256": "0xee5b26ae5b2f0a18ac9da2713c8c724cffd73d908ed627a54b9c40eb506edf9f",
+			"keccak256": "0xa494995fecdb60ca1efd95d07063b070cc1373fe81a9bdb0d22d601451209771",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0a0aaee897b9da9e4a52ae2cee3d76b2425948c11ab25320c99ea640086800af",
-				"dweb:/ipfs/QmVsAgPRv5oZ4YQPofFtjn5A48nYxmXZpFQf12snyUbwyT"
+				"bzz-raw://31acba56a54b9d3484e3cd7b0a917cbc5758b37e7e184df7b9a0c5b4dabdda68",
+				"dweb:/ipfs/QmRa2WYnt6kP2jPgV2CVyP3c3msA6j6uWYYVsFEucjyucH"
 			]
 		}
 	},
