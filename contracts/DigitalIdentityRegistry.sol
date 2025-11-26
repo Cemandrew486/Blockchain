@@ -31,7 +31,7 @@ contract DigitalIdentityRegistry {
     constructor(address _instituteResearcher, address _doctor) {
         owner = msg.sender;                     // Deployer is system owner
         instituteResearcher = _instituteResearcher;
-        doctor = _doctor;
+        doctor = _doctor; // I set this now just to test something this can be deleted.
     }
 
     //Modifiers start
