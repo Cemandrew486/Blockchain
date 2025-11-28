@@ -14,35 +14,35 @@
 			},
 			{
 				"inputs": [],
-				"name": "checkDuplicateAdminReverts",
+				"name": "test_checkDuplicateAdminReverts",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "checkRegisterOrganizationStoresData",
+				"name": "test_checkRegisterOrganizationStoresData",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "checkSetOrgStatusTogglesActive",
+				"name": "test_checkSetOrgStatusTogglesActive",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "checkSystemAdminIsSet",
+				"name": "test_checkSystemAdminIsSet",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "checkUpdateOrganizationAdmin",
+				"name": "test_checkUpdateOrganizationAdmin",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -59,19 +59,19 @@
 				"beforeAll()": {
 					"notice": "Runs once before all tests"
 				},
-				"checkDuplicateAdminReverts()": {
+				"test_checkDuplicateAdminReverts()": {
 					"notice": "5) Second organization with same admin must revert (\"Admin already linked\")"
 				},
-				"checkRegisterOrganizationStoresData()": {
+				"test_checkRegisterOrganizationStoresData()": {
 					"notice": "2) First registration should store org data and return orgId = 1"
 				},
-				"checkSetOrgStatusTogglesActive()": {
+				"test_checkSetOrgStatusTogglesActive()": {
 					"notice": "3) setOrgStatus should toggle isActive"
 				},
-				"checkSystemAdminIsSet()": {
+				"test_checkSystemAdminIsSet()": {
 					"notice": "1) systemAdmin must be set correctly at deployment"
 				},
-				"checkUpdateOrganizationAdmin()": {
+				"test_checkUpdateOrganizationAdmin()": {
 					"notice": "4) updateOrganizationAdmin should move admin mapping correctly"
 				}
 			},
@@ -80,7 +80,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"tests/OrganizationRegistry.t.sol": "OrganizationRegistryTest"
+			"tests/OrganizationRegistry_t.sol": "OrganizationRegistryTest"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -95,11 +95,11 @@
 	},
 	"sources": {
 		"contracts/OrganizationRegistry.sol": {
-			"keccak256": "0x495f90957728cf313c0f08692eb2c118480b48d8c35f4053baa6d24fb6203842",
+			"keccak256": "0xf4ca9d22aa6b4a96dab7306ba35b4c13896821717f2d99cae81a81527e55ea1d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f70817619b66a9113973bcf8378731e4ff9730d7b1818d122acf5f19bac7e15e",
-				"dweb:/ipfs/QmUqx97pExoz23KrBehKUskmpFyFccooesk84aFB1zRGtP"
+				"bzz-raw://225bf9ace5449f391248bb84fda445ba10b78e267d93058d11d1029f09d22289",
+				"dweb:/ipfs/QmdSasY9X2DW5yD1W2vD6DohLkHxE8mGt9ZjfKpRf1akQ7"
 			]
 		},
 		"remix_tests.sol": {
@@ -110,12 +110,12 @@
 				"dweb:/ipfs/QmdkW1tT5iadBvaHMCoskhDGZKnfdg8o1D9CcoQYtdJet7"
 			]
 		},
-		"tests/OrganizationRegistry.t.sol": {
-			"keccak256": "0xaddba4a2ff0c75beb21207964383ca309edba41238032713ad571c64ac438fbb",
+		"tests/OrganizationRegistry_t.sol": {
+			"keccak256": "0x364834681dc6c38293bbd905e0b7db1bec25de1be15ec4ae5678821b9ae6c8f4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://45cf5130c5014a6d39872e52691303186358d076f10c6b2bd7edec856a616d7f",
-				"dweb:/ipfs/QmTEWSbkQnKxnW8JXms2TDC8UZXvergTxUQ79giPVU1kAE"
+				"bzz-raw://179613b9a67c55eba37809ff6d49d09172192de3485588f923f16c945c522de3",
+				"dweb:/ipfs/QmP3fuSz9cCADycyu3J6hBcyHkqeYNND96GJkqojFEnMiG"
 			]
 		}
 	},

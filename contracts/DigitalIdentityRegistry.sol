@@ -31,7 +31,7 @@ contract DigitalIdentityRegistry {
     constructor(address _instituteResearcher, address _doctor) {
         owner = msg.sender;                     // Deployer is system owner
         instituteResearcher = _instituteResearcher;
-        doctor = _doctor; // I set this now just to test something this can be deleted.
+        doctor = _doctor; // I set this now just to test something, this can be deleted.
     }
 
     //Modifiers start
@@ -157,17 +157,17 @@ contract DigitalIdentityRegistry {
     function updateUserAddress(uint256 internalId, address newAddress) external onlyOwner {
     require(newAddress != address(0), "Invalid new address");
     
-    // Find current address for this internalId
+    //Find current address for this internalId
     address currentAddress = internalIdToAddress[internalId];
     require(currentAddress != address(0), "Unknown internalId");
 
-    // Make sure new address is not already registered
+    //Make sure new address is not already registered
     require(!users[newAddress].isRegistered, "New address already registered");
 
-    // Load existing user
+    //Load existing user
     User storage u = users[currentAddress];
 
-    // Recreate user under new address
+    //Recreate user under new address
     users[newAddress] = User({
         internalId: u.internalId,
         userAddress: newAddress,
@@ -176,10 +176,10 @@ contract DigitalIdentityRegistry {
         isRegistered: u.isRegistered
     });
 
-    // Clean up old mapping entry (This delete keyword resets a variable to its default value, as if it was never set.)
+    //Clean up old mapping entry (This delete keyword resets a variable to its default value, as if it was never set.)
     delete users[currentAddress];
 
-    // Update reverse index
+    //Update reverse index
     internalIdToAddress[internalId] = newAddress;
 
     emit UserAddressUpdated(internalId, currentAddress, newAddress);

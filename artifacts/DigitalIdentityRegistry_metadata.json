@@ -360,11 +360,11 @@
 	},
 	"sources": {
 		"contracts/DigitalIdentityRegistry.sol": {
-			"keccak256": "0xa494995fecdb60ca1efd95d07063b070cc1373fe81a9bdb0d22d601451209771",
+			"keccak256": "0x963df14f11d46727534cb07684ef6685b632384ae52c6c0d6e6610c4868946c3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://31acba56a54b9d3484e3cd7b0a917cbc5758b37e7e184df7b9a0c5b4dabdda68",
-				"dweb:/ipfs/QmRa2WYnt6kP2jPgV2CVyP3c3msA6j6uWYYVsFEucjyucH"
+				"bzz-raw://34f6aa82323db33ab0a624805532aa10cde845f1f84ef231de1d3d70a6b805f1",
+				"dweb:/ipfs/Qmd4AkFsF1MbrFuQ8P93yX6MCSfHwfrZhQmZuHZQLth7dA"
 			]
 		}
 	},
