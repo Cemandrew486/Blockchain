@@ -6,10 +6,77 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_systemAdmin",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orgId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "oldAdmin",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAdmin",
+						"type": "address"
+					}
+				],
+				"name": "OrganizationAdminUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "orgId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "hashName",
+						"type": "bytes32"
+					},
+					{
 						"indexed": false,
+						"internalType": "string",
+						"name": "countryCode",
+						"type": "string"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "admin",
+						"type": "address"
+					}
+				],
+				"name": "OrganizationRegistered",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "uint256",
 						"name": "orgId",
 						"type": "uint256"
@@ -21,36 +88,95 @@
 						"type": "bool"
 					}
 				],
-				"name": "OrgStatusUpdated",
+				"name": "OrganizationStatusUpdated",
 				"type": "event"
 			},
 			{
-				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "orgId",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
 						"internalType": "address",
-						"name": "admin",
+						"name": "",
 						"type": "address"
 					}
 				],
-				"name": "OrganizationRegistered",
-				"type": "event"
-			},
-			{
-				"inputs": [],
-				"name": "orgCount",
+				"name": "adminToOrgId",
 				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "adminAddr",
+						"type": "address"
+					}
+				],
+				"name": "getOrgIdForAdmin",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orgId",
+						"type": "uint256"
+					}
+				],
+				"name": "getOrganization",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "hashName",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "countryCode",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "admin",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "isActive",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orgId",
+						"type": "uint256"
+					}
+				],
+				"name": "isActiveOrganization",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -67,8 +193,13 @@
 				"name": "organizations",
 				"outputs": [
 					{
+						"internalType": "uint256",
+						"name": "orgId",
+						"type": "uint256"
+					},
+					{
 						"internalType": "bytes32",
-						"name": "nameHash",
+						"name": "hashName",
 						"type": "bytes32"
 					},
 					{
@@ -94,22 +225,28 @@
 				"inputs": [
 					{
 						"internalType": "bytes32",
-						"name": "_nameHash",
+						"name": "hashName",
 						"type": "bytes32"
 					},
 					{
 						"internalType": "string",
-						"name": "_countryCode",
+						"name": "countryCode",
 						"type": "string"
 					},
 					{
 						"internalType": "address",
-						"name": "_admin",
+						"name": "adminAddr",
 						"type": "address"
 					}
 				],
 				"name": "registerOrganization",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "orgId",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -122,11 +259,42 @@
 					},
 					{
 						"internalType": "bool",
-						"name": "_status",
+						"name": "status",
 						"type": "bool"
 					}
 				],
 				"name": "setOrgStatus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "systemAdmin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "orgId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "newAdmin",
+						"type": "address"
+					}
+				],
+				"name": "updateOrganizationAdmin",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -160,11 +328,11 @@
 	},
 	"sources": {
 		"contracts/OrganizationRegistry.sol": {
-			"keccak256": "0xc84ead59ecaf0102297212072ad2f7ca896e5a2bc720bd200d095ec901600f09",
+			"keccak256": "0xf4ca9d22aa6b4a96dab7306ba35b4c13896821717f2d99cae81a81527e55ea1d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://605dbc92d672a2723f598237eb4a912c55360e35fb7bc9aba6e84b19571b7469",
-				"dweb:/ipfs/QmVUZfwinwSbPg9xQ1CTp5u1LVuQqti3caEAswDLBCCq7f"
+				"bzz-raw://225bf9ace5449f391248bb84fda445ba10b78e267d93058d11d1029f09d22289",
+				"dweb:/ipfs/QmdSasY9X2DW5yD1W2vD6DohLkHxE8mGt9ZjfKpRf1akQ7"
 			]
 		}
 	},
