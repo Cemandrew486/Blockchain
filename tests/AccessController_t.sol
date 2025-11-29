@@ -3,7 +3,7 @@ pragma solidity ^0.8.28;
 
 import "../contracts/AccessController.sol";
 
-// Mock ConsentManager for testing
+// Mock ConsentManager for test_ing
 contract MockConsentManager {
     mapping(bytes32 => bool) private consents;
     
@@ -18,7 +18,7 @@ contract MockConsentManager {
     }
 }
 
-// Mock DataRegistry for testing
+// Mock DataRegistry for test_ing
 contract MockDataRegistry {
     struct DataPointer {
         bytes32 dataHash;
@@ -41,7 +41,7 @@ contract MockDataRegistry {
         revertReason = _reason;
     }
     
-    function getLatestDataPointer(address patient, uint8 dataType) external view returns (bytes32, uint256, uint32) {
+    function getLatest_DataPointer(address patient, uint8 dataType) external view returns (bytes32, uint256, uint32) {
         if (shouldRevert) {
             if (bytes(revertReason).length > 0) {
                 revert(revertReason);
@@ -85,7 +85,7 @@ contract AccessController_t {
     }
     
     // Test 1: Constructor validation
-    function testConstructorInvalidConsentManager() external {
+    function test_ConstructorInvalidConsentManager() external {
         try new AccessController(address(0), address(dataRegistry)) {
             revert("Should have reverted with invalid ConsentManager");
         } catch Error(string memory reason) {
@@ -96,7 +96,7 @@ contract AccessController_t {
         }
     }
     
-    function testConstructorInvalidDataRegistry() external {
+    function test_ConstructorInvalidDataRegistry() external {
         try new AccessController(address(consentManager), address(0)) {
             revert("Should have reverted with invalid DataRegistry");
         } catch Error(string memory reason) {
@@ -108,7 +108,7 @@ contract AccessController_t {
     }
     
     // Test 2: Successful data access with valid consent
-    function testAccessDataWithValidConsent() external returns (bool) {
+    function test_AccessDataWithValidConsent() external returns (bool) {
         // Setup: Grant consent - need to set it for msg.sender (this contract)
         consentManager.setConsent(patient, address(this), LAB_RESULTS, PURPOSE_TREATMENT, true);
         
@@ -118,7 +118,7 @@ contract AccessController_t {
         uint32 expectedVersion = 1;
         dataRegistry.setDataPointer(patient, LAB_RESULTS, expectedHash, expectedTimestamp, expectedVersion);
         
-        // Execute: Access data (msg.sender will be this test contract)
+        // Execute: Access data (msg.sender will be this test_ contract)
         (bytes32 dataHash, uint256 timestamp, uint32 version) = 
             accessController.accessData(patient, LAB_RESULTS, PURPOSE_TREATMENT);
         
@@ -131,7 +131,7 @@ contract AccessController_t {
     }
     
     // Test 3: Access denied without consent
-    function testAccessDataWithoutConsent() external {
+    function test_AccessDataWithoutConsent() external {
         // Setup: Register data but no consent
         bytes32 expectedHash = keccak256("medical-data-hash");
         dataRegistry.setDataPointer(patient, LAB_RESULTS, expectedHash, block.timestamp, 1);
@@ -147,7 +147,7 @@ contract AccessController_t {
     }
     
     // Test 4: Invalid patient address
-    function testAccessDataInvalidPatient() external {
+    function test_AccessDataInvalidPatient() external {
         try accessController.accessData(address(0), LAB_RESULTS, PURPOSE_TREATMENT) {
             revert("Should have reverted with invalid patient");
         } catch Error(string memory reason) {
@@ -159,7 +159,7 @@ contract AccessController_t {
     }
     
     // Test 5: Invalid data type
-    function testAccessDataInvalidDataType() external {
+    function test_AccessDataInvalidDataType() external {
         try accessController.accessData(patient, 0, PURPOSE_TREATMENT) {
             revert("Should have reverted with invalid dataType");
         } catch Error(string memory reason) {
@@ -180,7 +180,7 @@ contract AccessController_t {
     }
     
     // Test 6: Data retrieval failure with error message
-    function testAccessDataRetrievalFailureWithReason() external {
+    function test_AccessDataRetrievalFailureWithReason() external {
         // Setup: Grant consent but make registry fail
         consentManager.setConsent(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT, true);
         dataRegistry.setShouldRevert(true, "Data not found");
@@ -196,7 +196,7 @@ contract AccessController_t {
     }
     
     // Test 7: Data retrieval failure without error message
-    function testAccessDataRetrievalFailureWithoutReason() external {
+    function test_AccessDataRetrievalFailureWithoutReason() external {
         // Setup: Grant consent but make registry fail without reason
         consentManager.setConsent(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT, true);
         dataRegistry.setShouldRevert(true, "");
@@ -212,7 +212,7 @@ contract AccessController_t {
     }
     
     // Test 8: Check access permission (view function)
-    function testCheckAccessPermission() external {
+    function test__CheckAccessPermission() external {
         // Without consent
         bool hasAccess = accessController.checkAccessPermission(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT);
         require(!hasAccess, "Should not have access without consent");
@@ -226,7 +226,7 @@ contract AccessController_t {
     }
     
     // Test 9: Get contract addresses
-    function testGetAddresses() external {
+    function test__GetAddresses() view external {
         require(
             accessController.getDataRegistryAddress() == address(dataRegistry),
             "DataRegistry address mismatch"
@@ -238,7 +238,7 @@ contract AccessController_t {
     }
     
     // Test 10: Multiple data types
-    function testMultipleDataTypes() external returns (bool) {
+    function test_MultipleDataTypes() external returns (bool) {
         // Setup consents for all data types - using address(this) as the requester
         consentManager.setConsent(patient, address(this), LAB_RESULTS, PURPOSE_TREATMENT, true);
         consentManager.setConsent(patient, address(this), IMAGING, PURPOSE_TREATMENT, true);
