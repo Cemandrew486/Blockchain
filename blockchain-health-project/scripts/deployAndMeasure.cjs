@@ -149,6 +149,15 @@ async function main() {
   );
 
   console.log("\nAll contracts deployed.");
+  console.log("\nDeployed addresses:");
+  console.log("ConsentManager:          ", consent.address);
+  console.log("DataRegistry:            ", dataRegistry.address);
+  console.log("HealthConsentToken:      ", token.address);
+  console.log("OrganizationRegistry:    ", orgRegistry.address);
+  console.log("DigitalIdentityRegistry: ", identity.address);
+  console.log("AccessController:        ", access.address);
+  console.log("");
+
 
 
   const patientIdentity = identity.connect(patient);
