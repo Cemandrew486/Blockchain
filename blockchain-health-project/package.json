@@ -1,0 +1,24 @@
+{
+  "name": "blockchain-health-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^4.0.3",
+    "@nomicfoundation/hardhat-ignition": "^3.0.5",
+    "@nomicfoundation/hardhat-toolbox-viem": "^5.0.1",
+    "@types/node": "^22.19.1",
+    "ethers": "^5.7.2",
+    "forge-std": "github:foundry-rs/forge-std#v1.11.0",
+    "hardhat": "^3.0.16",
+    "typescript": "~5.8.0",
+    "viem": "^2.40.3"
+  }
+}
