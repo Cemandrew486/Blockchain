@@ -9,7 +9,6 @@ type Props = { account: `0x${string}` }
 export default function ConsentPanel({ account }: Props) {
   const [requester, setRequester] = useState('')
   const [dataType, setDataType] = useState(1)
-  const [purpose, setPurpose] = useState(1)
   const [durationDays, setDurationDays] = useState(30)
   const [status, setStatus] = useState<string | null>(null)
   const [hasConsent, setHasConsent] = useState<boolean | null>(null)
@@ -21,7 +20,7 @@ export default function ConsentPanel({ account }: Props) {
       address: CONSENT_MANAGER_ADDRESS,
       abi: consentManagerAbi,
       functionName: 'setConsent',
-      args: [requester as `0x${string}`, dataType, purpose, BigInt(durationDays)],
+      args: [requester as `0x${string}`, dataType, BigInt(durationDays)],
       account,
     })
     setStatus(`Tx sent: ${hash}`)
@@ -47,7 +46,7 @@ export default function ConsentPanel({ account }: Props) {
       address: CONSENT_MANAGER_ADDRESS,
       abi: consentManagerAbi,
       functionName: 'hasValidConsent',
-      args: [account, requester as `0x${string}`, dataType, purpose],
+      args: [account, requester as `0x${string}`, dataType],
     }) as boolean
     setHasConsent(result)
   }
@@ -66,14 +65,6 @@ export default function ConsentPanel({ account }: Props) {
             <option value={1}>1 - Lab results</option>
             <option value={2}>2 - Imaging</option>
             <option value={3}>3 - Full record</option>
-          </select>
-        </label>
-        <label>
-          Purpose
-          <select value={purpose} onChange={e => setPurpose(Number(e.target.value))}>
-            <option value={1}>1 - Treatment</option>
-            <option value={2}>2 - Research</option>
-            <option value={3}>3 - Insurance</option>
           </select>
         </label>
         <label>

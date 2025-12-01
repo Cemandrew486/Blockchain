@@ -108,10 +108,9 @@ async function main() {
   // Consent
   const patientConsent = consent.connect(patient);
   const dataType = 1; // LAB
-  const purpose = 1;
   const days = 30;
 
-  const consentTx = await patientConsent.setConsent(researcherAddr, dataType, purpose, days);
+  const consentTx = await patientConsent.setConsent(researcherAddr, dataType, days);
   await logTxCost("setConsent()", await consentTx.wait());
 
   // Data pointer
@@ -122,7 +121,7 @@ async function main() {
 
   // Data access
   const requestAccess = access.connect(researcher);
-  const accessTx = await requestAccess.accessData(patientAddr, dataType, purpose);
+  const accessTx = await requestAccess.accessData(patientAddr, dataType);
   await logTxCost("accessData()", await accessTx.wait());
 
   console.log("\nDONE ✅  ");

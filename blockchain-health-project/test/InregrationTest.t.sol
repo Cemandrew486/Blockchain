@@ -39,20 +39,20 @@ contract IntegrationTest is Test {
         identity.registerPatient(keccak256("patient"));
 
         vm.prank(patient);
-        consent.setConsent(requester, 1, 1, 7);
+        consent.setConsent(requester, 1, 7);
 
         vm.prank(patient);
         dataRegistry.setDataPointer(1, keccak256("DATA"));
 
         vm.prank(requester);
-        (bytes32 hash,,) = access.accessData(patient, 1, 1);
+        (bytes32 hash,,) = access.accessData(patient, 1);
         assertEq(hash, keccak256("DATA"));
 
         vm.prank(patient);
         consent.revokeConsent(requester);
 
         vm.prank(requester);
-        (bytes32 denied,,) = access.accessData(patient, 1, 1);
+        (bytes32 denied,,) = access.accessData(patient, 1);
         assertEq(denied, bytes32(0));
     }
 }

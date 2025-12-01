@@ -3,7 +3,7 @@
 pragma solidity ^0.8.28;
 
 interface IConsentManager {
-    function hasValidConsent(address patient, address requester, uint8 dataType, uint8 purpose) external view returns (bool);
+    function hasValidConsent(address patient, address requester, uint8 dataType) external view returns (bool);
 }
 
 interface IDataRegistry {
@@ -42,21 +42,19 @@ contract AccessController {
      * @dev Access patient data if consent is valid
      * @param patient Address of the patient whose data is being accessed
      * @param dataType Type of medical data (1=LAB_RESULTS, 2=IMAGING, 3=FULL_RECORD)
-     * @param purpose Purpose code for accessing the data
      * @return dataHash The hash pointer to the encrypted off-chain data
      * @return timestamp When this data was registered
      * @return version Version number of the data
      */
     function accessData(
         address patient, 
-        uint8 dataType, 
-        uint8 purpose
+        uint8 dataType
     ) external returns (bytes32 dataHash, uint256 timestamp, uint32 version) {
         require(patient != address(0), "Invalid patient address");
         require(dataType >= 1 && dataType <= 3, "Invalid dataType");
 
         // Check if requester has valid consent
-        bool hasConsent = consentManager.hasValidConsent(patient, msg.sender, dataType, purpose);
+        bool hasConsent = consentManager.hasValidConsent(patient, msg.sender, dataType);
 
         if (!hasConsent) {
             emit AccessLogged(msg.sender, patient, dataType, false, block.timestamp);
@@ -87,16 +85,14 @@ contract AccessController {
      * @param patient Address of the patient
      * @param requester Address of the requester
      * @param dataType Type of medical data
-     * @param purpose Purpose code
      * @return True if access would be granted
      */
     function checkAccessPermission(
         address patient,
         address requester,
-        uint8 dataType,
-        uint8 purpose
+        uint8 dataType
     ) external view returns (bool) {
-        return consentManager.hasValidConsent(patient, requester, dataType, purpose);
+        return consentManager.hasValidConsent(patient, requester, dataType);
     }
 
     function getDataRegistryAddress() external view returns (address) {

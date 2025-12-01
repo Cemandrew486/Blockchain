@@ -7,7 +7,6 @@ contract ConsentManager {
         address patient;
         address requester;
         uint8 dataType;
-        uint8 purpose;
         uint256 startTime;
         uint256 endTime;
         bool active;
@@ -18,9 +17,9 @@ contract ConsentManager {
     event ConsentGranted(address patient, address requester, uint8 dataType);
     event ConsentRevoked(address patient, address requester);
 
-    function setConsent(address _requester, uint8 _dataType, uint8 _purpose, uint256 _durationDays) external {
+    function setConsent(address _requester, uint8 _dataType, uint256 _durationDays) external {
         uint256 endTime = block.timestamp + (_durationDays * 1 days);
-        consents[msg.sender][_requester] = Consent(msg.sender, _requester, _dataType, _purpose, block.timestamp, endTime, true);
+        consents[msg.sender][_requester] = Consent(msg.sender, _requester, _dataType, block.timestamp, endTime, true);
         emit ConsentGranted(msg.sender, _requester, _dataType);
     }
 
@@ -29,11 +28,11 @@ contract ConsentManager {
         emit ConsentRevoked(msg.sender, _requester);
     }
 
-    function hasValidConsent(address patient, address requester, uint8 dataType, uint8 purpose) 
+    function hasValidConsent(address patient, address requester, uint8 dataType) 
         external view returns (bool) 
     {
         Consent memory c = consents[patient][requester];
 
-        return (c.active && block.timestamp < c.endTime && c.dataType == dataType && c.purpose == purpose);
+        return (c.active && block.timestamp < c.endTime && c.dataType == dataType);
     }
 }

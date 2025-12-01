@@ -169,13 +169,11 @@ async function main() {
 
   const patientConsent = consent.connect(patient);
   const dataType = 1; 
-  const purpose = 1;
   const days = 30;
 
   const consentTx = await patientConsent.setConsent(
     researcherAddr,
     dataType,
-    purpose,
     days
   );
   await logTxCost("ConsentManager.setConsent()", await consentTx.wait());
@@ -190,8 +188,7 @@ async function main() {
   const requestAccess = access.connect(researcher);
   const accessTx = await requestAccess.accessData(
     patientAddr,
-    dataType,
-    purpose
+    dataType
   );
   await logTxCost("AccessController.accessData()", await accessTx.wait());
 

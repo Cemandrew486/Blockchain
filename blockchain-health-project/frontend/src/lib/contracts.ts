@@ -40,7 +40,6 @@ export const consentManagerAbi: Abi = [
     inputs: [
       { name: '_requester', type: 'address' },
       { name: '_dataType', type: 'uint8' },
-      { name: '_purpose', type: 'uint8' },
       { name: '_durationDays', type: 'uint256' },
     ],
     outputs: [],
@@ -60,7 +59,6 @@ export const consentManagerAbi: Abi = [
       { name: 'patient', type: 'address' },
       { name: 'requester', type: 'address' },
       { name: 'dataType', type: 'uint8' },
-      { name: 'purpose', type: 'uint8' },
     ],
     outputs: [{ name: '', type: 'bool' }],
   },
@@ -86,7 +84,6 @@ export const accessControllerAbi: Abi = [
     inputs: [
       { name: 'patient', type: 'address' },
       { name: 'dataType', type: 'uint8' },
-      { name: 'purpose', type: 'uint8' },
     ],
     outputs: [
       { name: 'dataHash', type: 'bytes32' },

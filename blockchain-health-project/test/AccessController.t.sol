@@ -7,13 +7,13 @@ import "../contracts/AccessController.sol";
 contract MockConsentManager {
     mapping(bytes32 => bool) private consents;
     
-    function setConsent(address patient, address requester, uint8 dataType, uint8 purpose, bool value) external {
-        bytes32 key = keccak256(abi.encodePacked(patient, requester, dataType, purpose));
+    function setConsent(address patient, address requester, uint8 dataType, bool value) external {
+        bytes32 key = keccak256(abi.encodePacked(patient, requester, dataType));
         consents[key] = value;
     }
     
-    function hasValidConsent(address patient, address requester, uint8 dataType, uint8 purpose) external view returns (bool) {
-        bytes32 key = keccak256(abi.encodePacked(patient, requester, dataType, purpose));
+    function hasValidConsent(address patient, address requester, uint8 dataType) external view returns (bool) {
+        bytes32 key = keccak256(abi.encodePacked(patient, requester, dataType));
         return consents[key];
     }
 }
@@ -73,8 +73,6 @@ contract AccessController_t {
     uint8 constant IMAGING = 2;
     uint8 constant FULL_RECORD = 3;
     
-    uint8 constant PURPOSE_TREATMENT = 1;
-    
     event AccessLogged(address indexed requester, address indexed patient, uint8 dataType, bool success, uint256 timestamp);
     event AccessDenied(address indexed requester, address indexed patient, uint8 dataType, string reason);
     
@@ -110,7 +108,7 @@ contract AccessController_t {
     // Test 2: Successful data access with valid consent
     function test_AccessDataWithValidConsent() external returns (bool) {
         // Setup: Grant consent - need to set it for msg.sender (this contract)
-        consentManager.setConsent(patient, address(this), LAB_RESULTS, PURPOSE_TREATMENT, true);
+        consentManager.setConsent(patient, address(this), LAB_RESULTS, true);
         
         // Setup: Register data
         bytes32 expectedHash = keccak256("medical-data-hash");
@@ -120,7 +118,7 @@ contract AccessController_t {
         
         // Execute: Access data (msg.sender will be this test_ contract)
         (bytes32 dataHash, uint256 timestamp, uint32 version) = 
-            accessController.accessData(patient, LAB_RESULTS, PURPOSE_TREATMENT);
+            accessController.accessData(patient, LAB_RESULTS);
         
         // Verify
         require(dataHash == expectedHash, "Data hash mismatch");
@@ -138,7 +136,7 @@ contract AccessController_t {
         
         // Execute: Try to access without consent
         (bytes32 dataHash, uint256 timestamp, uint32 version) = 
-            accessController.accessData(patient, LAB_RESULTS, PURPOSE_TREATMENT);
+            accessController.accessData(patient, LAB_RESULTS);
         
         // Verify: Should return empty values
         require(dataHash == bytes32(0), "Expected empty data hash");
@@ -148,7 +146,7 @@ contract AccessController_t {
     
     // Test 4: Invalid patient address
     function test_AccessDataInvalidPatient() external {
-        try accessController.accessData(address(0), LAB_RESULTS, PURPOSE_TREATMENT) {
+        try accessController.accessData(address(0), LAB_RESULTS) {
             revert("Should have reverted with invalid patient");
         } catch Error(string memory reason) {
             require(
@@ -160,7 +158,7 @@ contract AccessController_t {
     
     // Test 5: Invalid data type
     function test_AccessDataInvalidDataType() external {
-        try accessController.accessData(patient, 0, PURPOSE_TREATMENT) {
+        try accessController.accessData(patient, 0) {
             revert("Should have reverted with invalid dataType");
         } catch Error(string memory reason) {
             require(
@@ -169,7 +167,7 @@ contract AccessController_t {
             );
         }
         
-        try accessController.accessData(patient, 4, PURPOSE_TREATMENT) {
+        try accessController.accessData(patient, 4) {
             revert("Should have reverted with invalid dataType");
         } catch Error(string memory reason) {
             require(
@@ -182,12 +180,12 @@ contract AccessController_t {
     // Test 6: Data retrieval failure with error message
     function test_AccessDataRetrievalFailureWithReason() external {
         // Setup: Grant consent but make registry fail
-        consentManager.setConsent(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT, true);
+        consentManager.setConsent(patient, requester, LAB_RESULTS, true);
         dataRegistry.setShouldRevert(true, "Data not found");
         
         // Execute
         (bytes32 dataHash, uint256 timestamp, uint32 version) = 
-            accessController.accessData(patient, LAB_RESULTS, PURPOSE_TREATMENT);
+            accessController.accessData(patient, LAB_RESULTS);
         
         // Verify: Should return empty values
         require(dataHash == bytes32(0), "Expected empty data hash");
@@ -198,12 +196,12 @@ contract AccessController_t {
     // Test 7: Data retrieval failure without error message
     function test_AccessDataRetrievalFailureWithoutReason() external {
         // Setup: Grant consent but make registry fail without reason
-        consentManager.setConsent(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT, true);
+        consentManager.setConsent(patient, requester, LAB_RESULTS, true);
         dataRegistry.setShouldRevert(true, "");
         
         // Execute
         (bytes32 dataHash, uint256 timestamp, uint32 version) = 
-            accessController.accessData(patient, LAB_RESULTS, PURPOSE_TREATMENT);
+            accessController.accessData(patient, LAB_RESULTS);
         
         // Verify: Should return empty values
         require(dataHash == bytes32(0), "Expected empty data hash");
@@ -214,14 +212,14 @@ contract AccessController_t {
     // Test 8: Check access permission (view function)
     function test__CheckAccessPermission() external {
         // Without consent
-        bool hasAccess = accessController.checkAccessPermission(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT);
+        bool hasAccess = accessController.checkAccessPermission(patient, requester, LAB_RESULTS);
         require(!hasAccess, "Should not have access without consent");
         
         // Grant consent
-        consentManager.setConsent(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT, true);
+        consentManager.setConsent(patient, requester, LAB_RESULTS, true);
         
         // With consent
-        hasAccess = accessController.checkAccessPermission(patient, requester, LAB_RESULTS, PURPOSE_TREATMENT);
+        hasAccess = accessController.checkAccessPermission(patient, requester, LAB_RESULTS);
         require(hasAccess, "Should have access with consent");
     }
     
@@ -240,9 +238,9 @@ contract AccessController_t {
     // Test 10: Multiple data types
     function test_MultipleDataTypes() external returns (bool) {
         // Setup consents for all data types - using address(this) as the requester
-        consentManager.setConsent(patient, address(this), LAB_RESULTS, PURPOSE_TREATMENT, true);
-        consentManager.setConsent(patient, address(this), IMAGING, PURPOSE_TREATMENT, true);
-        consentManager.setConsent(patient, address(this), FULL_RECORD, PURPOSE_TREATMENT, true);
+        consentManager.setConsent(patient, address(this), LAB_RESULTS, true);
+        consentManager.setConsent(patient, address(this), IMAGING, true);
+        consentManager.setConsent(patient, address(this), FULL_RECORD, true);
         
         // Setup data for each type
         bytes32 hash1 = keccak256("lab-data");
@@ -254,9 +252,9 @@ contract AccessController_t {
         dataRegistry.setDataPointer(patient, FULL_RECORD, hash3, block.timestamp, 1);
         
         // Access each type
-        (bytes32 dataHash1,,) = accessController.accessData(patient, LAB_RESULTS, PURPOSE_TREATMENT);
-        (bytes32 dataHash2,,) = accessController.accessData(patient, IMAGING, PURPOSE_TREATMENT);
-        (bytes32 dataHash3,,) = accessController.accessData(patient, FULL_RECORD, PURPOSE_TREATMENT);
+        (bytes32 dataHash1,,) = accessController.accessData(patient, LAB_RESULTS);
+        (bytes32 dataHash2,,) = accessController.accessData(patient, IMAGING);
+        (bytes32 dataHash3,,) = accessController.accessData(patient, FULL_RECORD);
         
         require(dataHash1 == hash1, "LAB_RESULTS hash mismatch");
         require(dataHash2 == hash2, "IMAGING hash mismatch");
