@@ -30,8 +30,8 @@ contract DigitalIdentityRegistryTest is Test {
     function test_RegisterPatient() public {
         bytes32 hashId = keccak256("patient1");
 
-        vm.prank(patient);
-        registry.registerPatient(hashId);
+        vm.prank(patient); // msg.sender is assigned to patient for the next call.
+        registry.registerPatient(hashId); // Register a paitent with the given hash
 
         (
             uint256 internalId,
@@ -39,13 +39,13 @@ contract DigitalIdentityRegistryTest is Test {
             DigitalIdentityRegistry.Role role,
             bytes32 storedHashId,
             bool isRegistered
-        ) = registry.users(patient);
+        ) = registry.users(patient); // Return the values from the mapping.
 
-        assertEq(userAddress, patient);
-        assertEq(uint8(role), uint8(DigitalIdentityRegistry.Role.PATIENT));
-        assertEq(storedHashId, hashId);
-        assertTrue(isRegistered);
-        assertGt(internalId, 0);
+        assertEq(userAddress, patient); //Check if addresses match.
+        assertEq(uint8(role), uint8(DigitalIdentityRegistry.Role.PATIENT)); // Check if roles match.
+        assertEq(storedHashId, hashId); //Check if hashes match.
+        assertTrue(isRegistered); // Check if isRegistered returns true. (isRegistered returns true if the entity is registered.)
+        assertGt(internalId, 0); // Internal id must be greater than 0 because it is incremented in the registration process
     }
 
     function test_RegisterPatientTwice() public {
@@ -55,58 +55,58 @@ contract DigitalIdentityRegistryTest is Test {
         registry.registerPatient(hashId);
 
         vm.prank(patient);
-        vm.expectRevert(bytes("User already registered"));
-        registry.registerPatient(hashId);
+        vm.expectRevert(bytes("User already registered")); // Next call should revert. 
+        registry.registerPatient(hashId); // Using the same hash to trigger vmexpectrevert. (can't register the same person again)
     }
 
     function test_RegisterDoctorOnlyOwner() public {
         bytes32 hashId = keccak256("doc1");
 
-        vm.prank(owner);
-        registry.registerDoctor(doc, hashId);
+        vm.prank(owner); // msg.sender is now equal to owner
+        registry.registerDoctor(doc, hashId); // Owner is allowed to register doctors.
 
         (
-            ,
-            address userAddress,
-            DigitalIdentityRegistry.Role role,
+            , // Ignore the first data
+            address userAddress, 
+            DigitalIdentityRegistry.Role role, 
             bytes32 storedHashId,
             bool isRegistered
-        ) = registry.users(doc);
+        ) = registry.users(doc); // Return the values for registered doctor.
 
         assertEq(userAddress, doc);
-        assertEq(uint8(role), uint8(DigitalIdentityRegistry.Role.DOCTOR));
+        assertEq(uint8(role), uint8(DigitalIdentityRegistry.Role.DOCTOR)); // Same checkings as we did for the patient.
         assertEq(storedHashId, hashId);
         assertTrue(isRegistered);
     }
 
     function test_RegisterDoctorNonOwner() public {
-        vm.prank(stranger);
-        vm.expectRevert(bytes("Only owner"));
-        registry.registerDoctor(doc, keccak256("doc1"));
+        vm.prank(stranger); // msg.sender == stranger. Stranger is address that is not owner.
+        vm.expectRevert(bytes("Only owner")); // Next call is expected to revert.
+        registry.registerDoctor(doc, keccak256("doc1"));  // This should be wrong since the msg.sender is equal to stranger.
     }
 
     function test_RegisterResearcherOwnerOrInstitute() public {
-        bytes32 hashId = keccak256("res1");
+        bytes32 hashId = keccak256("res1"); // This is an entity that could be researcher, owner or institute.
 
-        vm.prank(owner);
-        registry.registerResearcher(researcher, hashId);
+        vm.prank(owner); // Same. setting the msg.sender == owner.
+        registry.registerResearcher(researcher, hashId); //Register one of those entities.
 
         (
+            , // We don't care first two data.
             ,
-            ,
-            DigitalIdentityRegistry.Role roleOwner,
+            DigitalIdentityRegistry.Role roleOwner, 
             ,
             bool isRegisteredOwner
-        ) = registry.users(researcher);
+        ) = registry.users(researcher); // Return values for researcher (for this instance.)
 
-        assertEq(uint8(roleOwner), uint8(DigitalIdentityRegistry.Role.RESEARCHER));
-        assertTrue(isRegisteredOwner);
+        assertEq(uint8(roleOwner), uint8(DigitalIdentityRegistry.Role.RESEARCHER)); //Check role
+        assertTrue(isRegisteredOwner);// Check if registered.
 
         address researcher2 = address(0x9);
         bytes32 hashId2 = keccak256("res2");
 
-        vm.prank(institute);
-        registry.registerResearcher(researcher2, hashId2);
+        vm.prank(institute); // Set msg.sender to institute
+        registry.registerResearcher(researcher2, hashId2); // Register but this time institute.
 
         (
             ,
@@ -114,19 +114,19 @@ contract DigitalIdentityRegistryTest is Test {
             DigitalIdentityRegistry.Role roleInst,
             ,
             bool isRegisteredInst
-        ) = registry.users(researcher2);
+        ) = registry.users(researcher2); // Same logic
 
-        assertEq(uint8(roleInst), uint8(DigitalIdentityRegistry.Role.RESEARCHER));
-        assertTrue(isRegisteredInst);
+        assertEq(uint8(roleInst), uint8(DigitalIdentityRegistry.Role.RESEARCHER)); // Same checkings.
+        assertTrue(isRegisteredInst); // Same checkings.
     }
 
-    function test_RegisterResearcherUnauthorized() public {
+    function test_RegisterResearcherUnauthorized() public { // Same logic for a stranger trying to register an entity.
         vm.prank(stranger);
         vm.expectRevert(bytes("Only owner or institute"));
         registry.registerResearcher(researcher, keccak256("res1"));
     }
 
-    function test_RegisterInsuranceOnlyOwner() public {
+    function test_RegisterInsuranceOnlyOwner() public { //Same checking, but this time msg.sender is owner.
         bytes32 hashId = keccak256("ins1");
 
         vm.prank(owner);
@@ -144,7 +144,7 @@ contract DigitalIdentityRegistryTest is Test {
         assertTrue(isRegistered);
     }
 
-    function test_RegisterInsuranceNonOwner() public {
+    function test_RegisterInsuranceNonOwner() public { // Same stranger logic.
         vm.prank(stranger);
         vm.expectRevert(bytes("Only owner"));
         registry.registerInsurance(insurer, keccak256("ins1"));
@@ -172,7 +172,7 @@ contract DigitalIdentityRegistryTest is Test {
         assertGt(internalId, 0);
     }
 
-    function test_GetPatientNonDoctor() public { 
+    function test_GetPatientNonDoctor() public { // A stranger tries to look into details of a result or data of a patient.
         bytes32 hashId = keccak256("patient1");
 
         vm.prank(patient);
@@ -180,10 +180,10 @@ contract DigitalIdentityRegistryTest is Test {
 
         vm.prank(stranger);
         vm.expectRevert(bytes("Violating hippocratic oath is not allowed"));
-        registry.getPatient(patient); // başkası
+        registry.getPatient(patient); // this line should revert since the msg.sender is stranger.
     }
 
-    function test_GetStaffOnlyOwnerAndNotPatient() public {
+    function test_GetStaffOnlyOwnerAndNotPatient() public { // only owner is allowed see staff members.
         bytes32 hashIdDoc = keccak256("doc1");
 
         vm.prank(owner);
@@ -196,7 +196,7 @@ contract DigitalIdentityRegistryTest is Test {
             bytes32 returnedHash,
             bool isRegistered,
             uint256 internalId
-        ) = registry.getStaff(doc);
+        ) = registry.getStaff(doc); 
 
         assertEq(userAddress, doc);
         assertEq(uint8(role), uint8(DigitalIdentityRegistry.Role.DOCTOR));
@@ -205,7 +205,7 @@ contract DigitalIdentityRegistryTest is Test {
         assertGt(internalId, 0);
     }
 
-    function test_GetStaffNonOwner() public {
+    function test_GetStaffNonOwner() public { // Try to get staff as non owner person
         bytes32 hashIdDoc = keccak256("doc1");
 
         vm.prank(owner);
@@ -216,7 +216,7 @@ contract DigitalIdentityRegistryTest is Test {
         registry.getStaff(doc);
     }
 
-    function test_GetStaffOnPatient() public {
+    function test_GetStaffOnPatient() public { // Owner tries to see a detail of a person
         bytes32 hashIdP = keccak256("patient1");
 
         vm.prank(patient);
@@ -227,11 +227,12 @@ contract DigitalIdentityRegistryTest is Test {
         registry.getStaff(patient);
     }
 
-    function test_UpdateUserAddress() public {
+    function test_UpdateUserAddress() public { // To check if the updateUserAddress correctly works. It is designed to give a new address based 
+                                               // on the internalId of an entity..
         bytes32 hashIdDoc = keccak256("doc1");
 
         vm.prank(owner);
-        registry.registerDoctor(doc, hashIdDoc);
+        registry.registerDoctor(doc, hashIdDoc); // We register a doctor and change its address afterwards. (This is the goal at least :D)
 
         (
             uint256 internalId,
@@ -239,11 +240,11 @@ contract DigitalIdentityRegistryTest is Test {
             ,
             ,
             bool isRegistered
-        ) = registry.users(doc);
+        ) = registry.users(doc); 
 
         assertTrue(isRegistered);
 
-        vm.prank(owner);
+        vm.prank(owner); // Same msg.sender settings
         registry.updateUserAddress(internalId, newAddr);
 
         (
@@ -256,9 +257,9 @@ contract DigitalIdentityRegistryTest is Test {
 
         assertEq(newInternalId, internalId);
         assertEq(userAddress, newAddr);
-        assertEq(uint8(role), uint8(DigitalIdentityRegistry.Role.DOCTOR));
+        assertEq(uint8(role), uint8(DigitalIdentityRegistry.Role.DOCTOR)); //Checking the attributes of the new registry. (Same doc new address)
         assertEq(storedHashId, hashIdDoc);
-        assertTrue(newIsRegistered);
+        assertTrue(newIsRegistered); 
 
         (
             ,
@@ -267,7 +268,8 @@ contract DigitalIdentityRegistryTest is Test {
             ,
             bool oldIsRegistered
         ) = registry.users(doc);
-        assertFalse(oldIsRegistered);
+        assertFalse(oldIsRegistered); // old address should be seen as not registered since new address is given to the doc. (The update address method
+                                      // deletes all old data from the users mapping. It doesn't delet it just sets tthe values to the default values.
 
         address mappedAddr = registry.internalIdToAddress(internalId);
         assertEq(mappedAddr, newAddr);
@@ -275,11 +277,11 @@ contract DigitalIdentityRegistryTest is Test {
 
     function test_UpdateUserAddressRevertsForUnknownId() public {
         vm.prank(owner);
-        vm.expectRevert(bytes("Unknown internalId"));
+        vm.expectRevert(bytes("Unknown internalId")); // If an internal id does not exists then we shouldn't be able to assign a new address to that id.
         registry.updateUserAddress(999, newAddr);
     }
 
-    function test_UpdateUserAddressRevertsForZeroAddress() public {
+    function test_UpdateUserAddressRevertsForZeroAddress() public { // New address needs to be an actual address
         bytes32 hashIdDoc = keccak256("doc1");
 
         vm.prank(owner);
@@ -292,7 +294,7 @@ contract DigitalIdentityRegistryTest is Test {
         registry.updateUserAddress(internalId, address(0));
     }
 
-    function test_UpdateUserAddressRevertsIfNewAlreadyRegistered() public {
+    function test_UpdateUserAddressRevertsIfNewAlreadyRegistered() public { // New address shouldn't be registered before.
         bytes32 hashIdDoc = keccak256("doc1");
         bytes32 hashIdOther = keccak256("other");
 
