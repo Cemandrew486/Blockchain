@@ -15,6 +15,10 @@ export default function ConsentPanel({ account }: Props) {
 
   const onGrant = async (e: FormEvent) => {
     e.preventDefault()
+    if (!walletClient) {
+      setStatus('Wallet not connected')
+      return
+    }
     setStatus('Sending transaction…')
     const hash = await walletClient.writeContract({
       address: CONSENT_MANAGER_ADDRESS,
@@ -29,6 +33,10 @@ export default function ConsentPanel({ account }: Props) {
   }
 
   const onRevoke = async () => {
+    if (!walletClient) {
+      setStatus('Wallet not connected')
+      return
+    }
     setStatus('Revoking…')
     const hash = await walletClient.writeContract({
       address: CONSENT_MANAGER_ADDRESS,
