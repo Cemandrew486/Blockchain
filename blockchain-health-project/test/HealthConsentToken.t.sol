@@ -14,7 +14,7 @@ contract HealthConsentTokenTest is Test {
         token = new HealthConsentToken();
     }
 
-        // reward = durationDays *10*(dataType + 1) testing
+    // reward formula: reward = durationDays * 10 * (dataType + 1)
     function test_mintFormula() public {
         uint8 dataType = 1;
         uint256 durationDays = 7;
@@ -27,14 +27,16 @@ contract HealthConsentTokenTest is Test {
     }
 
     function test_mintAccumulates() public {
-        token.mintForConsent(patient1, 1, 5); //100
-        token.mintForConsent(patient1, 2, 3); // 90
+        // Mint twice for the same patient with different parameters
+        token.mintForConsent(patient1, 1, 5); // 5 * 10 * (1 + 1) = 100
+        token.mintForConsent(patient1, 2, 3); // 3 * 10 * (2 + 1) = 90
 
         uint256 bal = token.balanceOf(patient1);
-        assertEq(bal, 190); // toplam 190
+        assertEq(bal, 190); // Total should accumulate: 100 + 90 = 190
     }
 
     function test_mintSeparatePatients() public {
+        // Minting to different patients must affect balances independently
         token.mintForConsent(patient1, 1, 5); // 100
         token.mintForConsent(patient2, 1, 5); // 100
 
@@ -46,7 +48,7 @@ contract HealthConsentTokenTest is Test {
     }
 
     function test_zeroDuration() public {
-        // durationDays = 0 → reward = 0
+        // durationDays = 0 should result in a zero reward
         token.mintForConsent(patient1, 1, 0);
 
         uint256 bal = token.balanceOf(patient1);

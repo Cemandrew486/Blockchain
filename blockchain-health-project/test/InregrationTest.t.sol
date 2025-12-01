@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-//npx hardhat test
+// This integration test exercises the happy path across multiple contracts.
 
 pragma solidity ^0.8.28;
 
@@ -23,6 +23,7 @@ contract IntegrationTest is Test {
     address institute = address(0x4);
 
     function setUp() public {
+        // Deploy all contracts as the institute account
         vm.startPrank(institute);
 
         consent = new ConsentManager();
@@ -30,27 +31,32 @@ contract IntegrationTest is Test {
         access = new AccessController(address(consent), address(dataRegistry));
         identity = new DigitalIdentityRegistry(institute, doctor);
 
-        vm.stopPrank();
+        vm.stopPrank(); // Stop impersonating
     }
 
     function test_FullUserWorkflow() public {
-
+        // 1) Patient self-registers in the identity registry (stores hashId and marks as registered)
         vm.prank(patient);
         identity.registerPatient(keccak256("patient"));
 
+        // 2) Patient grants consent to requester for dataType=1 for 7 days
         vm.prank(patient);
         consent.setConsent(requester, 1, 7);
 
+        // 3) Patient registers an off-chain data pointer (represented by the keccak256 hash)
         vm.prank(patient);
         dataRegistry.setDataPointer(1, keccak256("DATA"));
 
+        // 4) Requester accesses patient's latest data for dataType=1 (should succeed)
         vm.prank(requester);
         (bytes32 hash,,) = access.accessData(patient, 1);
         assertEq(hash, keccak256("DATA"));
 
+        // 5) Patient revokes consent, invalidating future access attempts
         vm.prank(patient);
         consent.revokeConsent(requester);
 
+        // 6) Requester tries again but now access is denied (returns empty tuple)
         vm.prank(requester);
         (bytes32 denied,,) = access.accessData(patient, 1);
         assertEq(denied, bytes32(0));

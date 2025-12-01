@@ -22,7 +22,7 @@ contract OrganizationRegistryTest is Test {
         );
     }
 
-       /// Runs before each test 
+       /// Runs before each test
     function setUp() public {
         // Deploy the contract; this test contract acts as systemAdmin
         org = new OrganizationRegistry(systemAdmin);
@@ -65,21 +65,21 @@ contract OrganizationRegistryTest is Test {
 
     /// 3) setOrgStatus should toggle isActive
     function test_checkSetOrgStatusTogglesActive() public {
+        // Register an organization first
+        bytes32 hashName = keccak256(abi.encodePacked("Org1"));
+        string memory countryCode = "NL";
+        address adminAddr = address(0x123);
 
-    bytes32 hashName = keccak256(abi.encodePacked("Org1")); //check
-    string memory countryCode = "NL";
-    address adminAddr = address(0x123);
-
-    org.registerOrganization(hashName, countryCode, adminAddr);
-        // Disable org 1
+        org.registerOrganization(hashName, countryCode, adminAddr);
+        // Disable org 1 and verify
         org.setOrgStatus(1, false);
         bool activeAfterDisable = org.isActiveOrganization(1);
         assertFalse(activeAfterDisable, "Org should be inactive after setOrgStatus(false)");
 
-        // Enable again
+        // Enable again and verify
         org.setOrgStatus(1, true);
         bool activeAfterEnable = org.isActiveOrganization(1);
-        assertTrue(activeAfterEnable, "Org should be active after setOrgSt  atus(true)");
+        assertTrue(activeAfterEnable, "Org should be active after setOrgStatus(true)");
     }
 
     /// 4) updateOrganizationAdmin should move admin mapping correctly
@@ -90,7 +90,7 @@ contract OrganizationRegistryTest is Test {
         bytes32 hashName = keccak256(abi.encodePacked("Org1"));
         org.registerOrganization(hashName, "NL", oldAdmin);
 
-        // Precondition: org 1 exists from earlier tests
+        // Update the admin and verify mapping changes
         org.updateOrganizationAdmin(1, newAdmin);
 
         (
