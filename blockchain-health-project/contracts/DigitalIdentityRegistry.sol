@@ -46,7 +46,7 @@ contract DigitalIdentityRegistry {
     }
 
     modifier onlyDoctor(){
-        require (msg.sender == doctor, "Violating hippocratic oath is not allowed");
+        require (msg.sender == doctor, "Only doctor");
         _;
     }
     //Modifiers end

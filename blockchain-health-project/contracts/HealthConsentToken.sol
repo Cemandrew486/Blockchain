@@ -11,7 +11,7 @@ contract HealthConsentToken {
 
     event TokensMinted(address to, uint256 amount);
 
-    function mintForConsent(address patient, uint8 dataType, uint256 durationDays) external {
+    function mintForConsent(address patient, uint8 dataType, uint256 durationDays) external { //mint
         uint256 reward = durationDays * 10 * (dataType + 1);
         balances[patient] += reward;
 

@@ -179,7 +179,7 @@ contract DigitalIdentityRegistryTest is Test {
         registry.registerPatient(hashId);
 
         vm.prank(stranger);
-        vm.expectRevert(bytes("Violating hippocratic oath is not allowed"));
+        vm.expectRevert(bytes("Only doctor"));
         registry.getPatient(patient); // this line should revert since the msg.sender is stranger.
     }
 
