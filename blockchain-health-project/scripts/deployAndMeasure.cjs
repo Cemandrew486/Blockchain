@@ -17,7 +17,11 @@ function loadArtifact(file, name) {
   return JSON.parse(fs.readFileSync(artifactPath, "utf8"));
 }
 
-async function logTxCost(label, receipt) {
+async function logTxCost(label, tx) {
+  const t0 = Date.now();
+  const receipt = await tx.wait();
+  const t1 = Date.now();
+
   const gasUsed = receipt.gasUsed;
   const gasPrice = receipt.effectiveGasPrice || receipt.gasPrice;
 
@@ -27,6 +31,9 @@ async function logTxCost(label, receipt) {
   const totalWei = gasUsed.mul(gasPrice);
   console.log(`Gas price: ${ethers.utils.formatUnits(gasPrice, "gwei")} gwei`);
   console.log(`Total cost: ${ethers.utils.formatEther(totalWei)} ETH`);
+  console.log(`Confirmation time: ${t1 - t0} ms`);
+
+  return receipt;
 }
 
 async function main() {
@@ -71,20 +78,15 @@ async function main() {
     "OrganizationRegistry"
   );
 
+  // **** Deploy contracts ****
 
-
-  // contracts
   const ConsentFactory = new ethers.ContractFactory(
     ConsentManager.abi,
     ConsentManager.bytecode,
     admin
   );
   const consent = await ConsentFactory.deploy();
-  await logTxCost(
-    "Deploy ConsentManager",
-    await consent.deployTransaction.wait()
-  );
-
+  await logTxCost("Deploy ConsentManager", consent.deployTransaction);
 
   const DataFactory = new ethers.ContractFactory(
     DataRegistry.abi,
@@ -92,11 +94,7 @@ async function main() {
     admin
   );
   const dataRegistry = await DataFactory.deploy();
-  await logTxCost(
-    "Deploy DataRegistry",
-    await dataRegistry.deployTransaction.wait()
-  );
-
+  await logTxCost("Deploy DataRegistry", dataRegistry.deployTransaction);
 
   const TokenFactory = new ethers.ContractFactory(
     HealthConsentToken.abi,
@@ -104,11 +102,7 @@ async function main() {
     admin
   );
   const token = await TokenFactory.deploy();
-  await logTxCost(
-    "Deploy HealthConsentToken",
-    await token.deployTransaction.wait()
-  );
-
+  await logTxCost("Deploy HealthConsentToken", token.deployTransaction);
 
   const OrgFactory = new ethers.ContractFactory(
     OrganizationRegistry.abi,
@@ -116,11 +110,7 @@ async function main() {
     admin
   );
   const orgRegistry = await OrgFactory.deploy(adminAddr);
-  await logTxCost(
-    "Deploy OrganizationRegistry",
-    await orgRegistry.deployTransaction.wait()
-  );
-
+  await logTxCost("Deploy OrganizationRegistry", orgRegistry.deployTransaction);
 
   const IdFactory = new ethers.ContractFactory(
     DigitalIdentityRegistry.abi,
@@ -128,11 +118,7 @@ async function main() {
     admin
   );
   const identity = await IdFactory.deploy(researcherAddr, doctorAddr);
-  await logTxCost(
-    "Deploy DigitalIdentityRegistry",
-    await identity.deployTransaction.wait()
-  );
-
+  await logTxCost("Deploy DigitalIdentityRegistry", identity.deployTransaction);
 
   const AccessFactory = new ethers.ContractFactory(
     AccessController.abi,
@@ -143,10 +129,7 @@ async function main() {
     consent.address,
     dataRegistry.address
   );
-  await logTxCost(
-    "Deploy AccessController",
-    await access.deployTransaction.wait()
-  );
+  await logTxCost("Deploy AccessController", access.deployTransaction);
 
   console.log("\nAll contracts deployed.");
   console.log("\nDeployed addresses:");
@@ -158,17 +141,17 @@ async function main() {
   console.log("AccessController:        ", access.address);
   console.log("");
 
-
+  // ****  Identity - Consent - Data - Access ****
 
   const patientIdentity = identity.connect(patient);
   const hashId = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("patient@email|ID001")
   );
   const regTx = await patientIdentity.registerPatient(hashId);
-  await logTxCost("DigitalIdentityRegistry.registerPatient()", await regTx.wait());
+  await logTxCost("DigitalIdentityRegistry.registerPatient()", regTx);
 
   const patientConsent = consent.connect(patient);
-  const dataType = 1; 
+  const dataType = 1;
   const days = 30;
 
   const consentTx = await patientConsent.setConsent(
@@ -176,33 +159,34 @@ async function main() {
     dataType,
     days
   );
-  await logTxCost("ConsentManager.setConsent()", await consentTx.wait());
+  await logTxCost("ConsentManager.setConsent()", consentTx);
 
   const patientData = dataRegistry.connect(patient);
   const dummyHash = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("encrypted-data")
   );
   const dataTx = await patientData.setDataPointer(dataType, dummyHash);
-  await logTxCost("DataRegistry.setDataPointer()", await dataTx.wait());
+  await logTxCost("DataRegistry.setDataPointer()", dataTx);
 
   const requestAccess = access.connect(researcher);
   const accessTx = await requestAccess.accessData(
     patientAddr,
     dataType
   );
-  await logTxCost("AccessController.accessData()", await accessTx.wait());
+  await logTxCost("AccessController.accessData()", accessTx);
 
-  
   const tokenForPatient = token.connect(admin);
   const mintTx = await tokenForPatient.mintForConsent(
     patientAddr,
     dataType,
     days
   );
-  await logTxCost("HealthConsentToken.mintForConsent()", await mintTx.wait());
+  await logTxCost("HealthConsentToken.mintForConsent()", mintTx);
 
   const revokeTx = await patientConsent.revokeConsent(researcherAddr);
-  await logTxCost("ConsentManager.revokeConsent()", await revokeTx.wait());
+  await logTxCost("ConsentManager.revokeConsent()", revokeTx);
+
+  // **** Organization Registry operations ****
 
   const hashOrgName = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("Awesome Hospital")
@@ -212,18 +196,15 @@ async function main() {
     "NL",
     orgAdminAddr
   );
-  const registerOrgReceipt = await registerOrgTx.wait();
   await logTxCost(
     "OrganizationRegistry.registerOrganization()",
-    registerOrgReceipt
+    registerOrgTx
   );
 
   const orgId = 1;
 
-
   const setStatusTx = await orgRegistry.setOrgStatus(orgId, false);
-  await logTxCost("OrganizationRegistry.setOrgStatus()", await setStatusTx.wait());
-
+  await logTxCost("OrganizationRegistry.setOrgStatus()", setStatusTx);
 
   const updateAdminTx = await orgRegistry.updateOrganizationAdmin(
     orgId,
@@ -231,10 +212,11 @@ async function main() {
   );
   await logTxCost(
     "OrganizationRegistry.updateOrganizationAdmin()",
-    await updateAdminTx.wait()
+    updateAdminTx
   );
 
- 
+  // **** Staff registration in Identity Registry ****
+
   const ownerIdentity = identity.connect(admin);
   const doctorHashId = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("doctoremail")
@@ -245,9 +227,8 @@ async function main() {
   );
   await logTxCost(
     "DigitalIdentityRegistry.registerDoctor()",
-    await regDoctorTx.wait()
+    regDoctorTx
   );
-
 
   const researcherHashId = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("researcheremail")
@@ -258,9 +239,8 @@ async function main() {
   );
   await logTxCost(
     "DigitalIdentityRegistry.registerResearcher()",
-    await regResearcherTx.wait()
+    regResearcherTx
   );
-
 
   const insuranceHashId = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes("employemail")
@@ -271,10 +251,10 @@ async function main() {
   );
   await logTxCost(
     "DigitalIdentityRegistry.registerInsurance()",
-    await regInsuranceTx.wait()
+    regInsuranceTx
   );
 
-
+  // **** Doctor viewing patient & updating user address ****
 
   const doctorView = identity.connect(doctor);
   const patientInfo = await doctorView.getPatient(patientAddr);
@@ -286,7 +266,7 @@ async function main() {
   );
   await logTxCost(
     "DigitalIdentityRegistry.updateUserAddress()",
-    await updateUserTx.wait()
+    updateUserTx
   );
 
   console.log("\nDONE ");
