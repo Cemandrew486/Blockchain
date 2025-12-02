@@ -14,9 +14,11 @@ contract OrganizationRegistryTest is Test {
         address a,
         address b,
         string memory message
-    ) internal {
+    ) pure internal  {
         assertEq(
-            bytes32(uint256(uint160(a))),
+            bytes32(uint256(uint160(a))), // First cast into 160 because ethereum addresses are 160 bit long
+                                          // Then cast it into 256 bit because assert eq supports it and solidity cannot
+                                          // directly cast address -> uint256. This is for safety. 
             bytes32(uint256(uint160(b))),
             message
         );
@@ -30,7 +32,7 @@ contract OrganizationRegistryTest is Test {
 
 
     /// 1) systemAdmin must be set correctly at deployment
-    function test_checkSystemAdminIsSet() public {
+    function test_checkSystemAdminIsSet() public view {
         assertEqAddress(
             org.systemAdmin(),
             systemAdmin,
@@ -67,7 +69,7 @@ contract OrganizationRegistryTest is Test {
     function test_checkSetOrgStatusTogglesActive() public {
         // Register an organization first
         bytes32 hashName = keccak256(abi.encodePacked("Org1"));
-        string memory countryCode = "NL";
+        string memory countryCode = "TR";
         address adminAddr = address(0x123);
 
         org.registerOrganization(hashName, countryCode, adminAddr);

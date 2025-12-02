@@ -21,7 +21,7 @@ contract DigitalIdentityRegistryTest is Test {
         registry = new DigitalIdentityRegistry(institute, doc);
     }
 
-    function test_ConstructorSetsRoles() public {
+    function test_ConstructorSetsRoles() public view {
         assertEq(registry.owner(), owner);
         assertEq(registry.instituteResearcher(), institute);
         assertEq(registry.doctor(), doc);
