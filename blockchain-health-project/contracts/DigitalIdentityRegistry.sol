@@ -134,7 +134,7 @@ contract DigitalIdentityRegistry {
         );
     }
 
-    //To make it more readable the desired result (Allow only doctors to make sure that the hippocratic oath is not violated)
+    //Only Owner
     function getStaff(address account) external onlyOwner view returns (
         address userAddress,
         Role role,
