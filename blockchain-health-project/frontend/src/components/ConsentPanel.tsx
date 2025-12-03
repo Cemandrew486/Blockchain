@@ -148,7 +148,7 @@ export default function ConsentPanel({ account }: Props) {
       {status && <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>{status}</p>}
       {hasConsent !== null && (
         <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
-          Has valid consent? <strong>{hasConsent ? '✅ YES' : '❌ NO'}</strong>
+          Has valid consent? <strong>{hasConsent ? 'YES' : 'NO'}</strong>
         </p>
       )}
     </section>

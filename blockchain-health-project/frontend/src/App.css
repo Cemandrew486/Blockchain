@@ -32,8 +32,8 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
-  justify-content: center;  /* horizontal center of app-container */
-  align-items: center;      /* vertical center of app-container */
+  justify-content: center;
+  align-items: center;
 
 }
 
@@ -122,8 +122,6 @@ textarea {
   resize: vertical;
 }
 
-/* Buttons */
-
 button {
   border: none;
   border-radius: 999px;
@@ -148,8 +146,6 @@ button:active {
   box-shadow: 0 8px 18px rgba(34, 197, 94, 0.35);
 }
 
-/* Secondary buttons (like Revoke / Check) */
-
 button + button {
   background: #111827;
   color: var(--text);
@@ -162,7 +158,6 @@ button + button:hover {
   box-shadow: 0 0 0 1px #374151;
 }
 
-/* Tables (Audit log) */
 
 table {
   width: 100%;
@@ -200,13 +195,11 @@ tbody tr:nth-child(even) {
   gap: 1.5rem;
 }
 
-/* remove extra bottom margin when inside grid */
 .cards-grid section,
 .cards-grid-two section {
   margin-bottom: 0;
 }
 
-/* On wider screens: 3 cards next to each other */
 @media (min-width: 960px) {
   .cards-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -217,7 +210,6 @@ tbody tr:nth-child(even) {
   }
 }
 
-/* Code blocks */
 code {
   font-family: 'Courier New', monospace;
   background: rgba(15, 23, 42, 0.7);
@@ -226,14 +218,12 @@ code {
   font-size: 0.85em;
 }
 
-/* Improved section headers */
 section h2 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-/* Scrollable table container */
 @media (max-width: 768px) {
   table {
     font-size: 0.75rem;

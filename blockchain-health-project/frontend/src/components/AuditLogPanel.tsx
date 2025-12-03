@@ -80,7 +80,7 @@ export default function AuditLogPanel({ account }: Props) {
                       color: l.success ? 'var(--accent)' : '#ef4444',
                       fontWeight: 500 
                     }}>
-                      {l.success ? '✅' : '❌'}
+                      {l.success ? 'Yes' : 'No'}
                     </span>
                   </td>
                   <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
