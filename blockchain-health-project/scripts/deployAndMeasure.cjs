@@ -37,7 +37,7 @@ async function logTxCost(label, tx) {
 }
 
 async function main() {
-  const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545"); //idk if i need this but doesnt work otherwise
+  const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545"); // !!!
 
   const admin = provider.getSigner(0);
   const patient = provider.getSigner(1);
