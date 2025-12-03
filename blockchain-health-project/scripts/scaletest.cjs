@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 
-const NUM_PATIENTS = 18; 
+const NUM_PATIENTS = 5; 
 
 function loadArtifact(file, name) {
   const artifactPath = path.join(
@@ -146,6 +146,7 @@ async function main() {
 
   const dataType = 1;
   const days = 30;
+  const dataVersion = 1;
 
   for (let i = 0; i < NUM_PATIENTS; i++) {
     const patient = provider.getSigner(2 + i);
@@ -177,7 +178,8 @@ async function main() {
     const consentTx = await patientConsent.setConsent(
       researcherAddr,
       dataType,
-      days
+      days,
+      dataVersion
     );
     await measureTx(
       "ConsentManager.setConsent()",
@@ -197,7 +199,8 @@ async function main() {
 
     const accessTx = await requestAccess.accessData(
       patientAddr,
-      dataType
+      dataType,
+      dataVersion
     );
     //console.log("aaaaaa");
     await measureTx(
