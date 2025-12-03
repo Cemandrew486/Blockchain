@@ -94,7 +94,7 @@ contract AccessController {
             bytes32 _dataHash,
             uint256 _timestamp
         ) {
-            emit AccessLogged(msg.sender, patient, dataType, dataVersion, false, block.timestamp);
+            emit AccessLogged(msg.sender, patient, dataType, dataVersion, false, block.timestamp); // should be true?
             return (_dataHash, _timestamp, dataVersion);
         } catch Error(string memory reason) {
             emit AccessLogged(msg.sender, patient, dataType, dataVersion, false, block.timestamp);

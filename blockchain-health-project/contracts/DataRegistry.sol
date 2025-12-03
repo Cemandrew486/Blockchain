@@ -12,7 +12,7 @@ contract DataRegistry {
     struct DataPointer {
         bytes32 dataHash;   // keccak256(encrypted off-chain record)
         uint256 timestamp;  // when this version was registered
-        uint32 version;     // 0, 1, 2..., per (patient, dataType)
+        uint32 version;     // 1, 2..., per (patient, dataType)
     }
 
     // address of the patient is given -> see which type is requested -> point to the array that stored that type of information
