@@ -42,6 +42,9 @@ export default function IdentityPanel({ account }: Props) {
 
   const onRegister = async (e: FormEvent) => {
     e.preventDefault()
+    if (!walletClient) {
+      return
+    }
     setLoading(true)
     try {
       const hashInput = `${email.toLowerCase()}#${medicalId}`
@@ -63,31 +66,72 @@ export default function IdentityPanel({ account }: Props) {
 
   return (
     <section>
-      <h2>1. Digital Identity</h2>
+      <h2>Digital Identity</h2>
+      <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '-0.5rem' }}>
+        Blockchain-verified identity registration
+      </p>
+      
       {user?.isRegistered ? (
-        <div>
-          <p>You are registered as: <strong>{roleNames[user.role] ?? 'UNKNOWN'}</strong></p>
-          <p>Internal ID: {user.internalId.toString()}</p>
-          <p>HashId: <code>{user.hashId}</code></p>
+        <div style={{ 
+          padding: '1rem', 
+          background: 'rgba(34, 197, 94, 0.1)', 
+          borderRadius: '0.5rem',
+          border: '1px solid rgba(34, 197, 94, 0.3)',
+          marginBottom: '1rem',
+          maxWidth: '500px',
+          margin: '0 auto 1rem auto'
+        }}>
+          <p style={{ margin: '0 0 0.5rem 0' }}>
+            <strong>Role:</strong> <span style={{ color: 'var(--accent)' }}>{roleNames[user.role] ?? 'UNKNOWN'}</span>
+          </p>
+          <p style={{ margin: '0 0 0.5rem 0' }}>
+            <strong>Internal ID:</strong> {user.internalId.toString()}
+          </p>
+          <p style={{ margin: 0, fontSize: '0.85rem' }}>
+            <strong>Hash ID:</strong><br />
+            <code style={{ fontSize: '0.75rem', wordBreak: 'break-all' }}>{user.hashId}</code>
+          </p>
         </div>
       ) : (
-        <p>You are not registered yet.</p>
+        <div style={{ 
+          padding: '0.75rem', 
+          background: 'rgba(251, 191, 36, 0.1)', 
+          borderRadius: '0.5rem',
+          border: '1px solid rgba(251, 191, 36, 0.3)',
+          marginBottom: '1rem',
+          fontSize: '0.9rem'
+        }}>
+          <p style={{ margin: 0 }}>⚠️ You are not registered yet. Please register below.</p>
+        </div>
       )}
 
-      <form onSubmit={onRegister} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxWidth: 400 }}>
+      <form onSubmit={onRegister} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxWidth: 400, margin: '0 auto' }}>
         <label>
           Email
-          <input value={email} onChange={e => setEmail(e.target.value)} required />
+          <input value={email} onChange={e => setEmail(e.target.value)} placeholder="your.email@example.com" required />
         </label>
         <label>
           Medical ID
-          <input value={medicalId} onChange={e => setMedicalId(e.target.value)} required />
+          <input value={medicalId} onChange={e => setMedicalId(e.target.value)} placeholder="Your medical ID number" required />
         </label>
         <button type="submit" disabled={loading}>
           {loading ? 'Registering…' : 'Register as patient'}
         </button>
       </form>
-      {txHash && <p>Last tx: <code>{txHash}</code></p>}
+      
+      {txHash && (
+        <div style={{ 
+          marginTop: '0.75rem', 
+          padding: '0.5rem', 
+          background: 'rgba(15, 23, 42, 0.6)', 
+          borderRadius: '0.5rem',
+          fontSize: '0.85rem'
+        }}>
+          <p style={{ margin: 0 }}>
+            <strong>Transaction:</strong> <code style={{ fontSize: '0.75rem' }}>{txHash}</code>
+          </p>
+        </div>
+      )}
     </section>
   )
 }

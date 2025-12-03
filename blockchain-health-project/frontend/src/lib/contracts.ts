@@ -40,6 +40,7 @@ export const consentManagerAbi: Abi = [
     inputs: [
       { name: '_requester', type: 'address' },
       { name: '_dataType', type: 'uint8' },
+      { name: '_dataVersion', type: 'uint32' },
       { name: '_durationDays', type: 'uint256' },
     ],
     outputs: [],
@@ -56,9 +57,10 @@ export const consentManagerAbi: Abi = [
     name: 'hasValidConsent',
     stateMutability: 'view',
     inputs: [
-      { name: 'patient', type: 'address' },
-      { name: 'requester', type: 'address' },
-      { name: 'dataType', type: 'uint8' },
+      { name: '_patient', type: 'address' },
+      { name: '_requester', type: 'address' },
+      { name: '_dataType', type: 'uint8' },
+      { name: '_dataVersion', type: 'uint32' },
     ],
     outputs: [{ name: '', type: 'bool' }],
   },
@@ -73,6 +75,7 @@ export const accessControllerAbi: Abi = [
       { name: 'requester', type: 'address', indexed: true },
       { name: 'patient', type: 'address', indexed: true },
       { name: 'dataType', type: 'uint8', indexed: false },
+      { name: 'dataVersion', type: 'uint32', indexed: false },
       { name: 'success', type: 'bool', indexed: false },
       { name: 'timestamp', type: 'uint256', indexed: false },
     ],
@@ -84,11 +87,86 @@ export const accessControllerAbi: Abi = [
     inputs: [
       { name: 'patient', type: 'address' },
       { name: 'dataType', type: 'uint8' },
+      { name: 'dataVersion', type: 'uint32' },
     ],
     outputs: [
       { name: 'dataHash', type: 'bytes32' },
       { name: 'timestamp', type: 'uint256' },
       { name: 'version', type: 'uint32' },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'checkAccessPermission',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'patient', type: 'address' },
+      { name: 'requester', type: 'address' },
+      { name: 'dataType', type: 'uint8' },
+      { name: 'dataVersion', type: 'uint32' },
+    ],
+    outputs: [{ name: '', type: 'bool' }],
+  },
+]
+
+export const dataRegistryAbi: Abi = [
+  {
+    type: 'function',
+    name: 'setDataPointer',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'dataType', type: 'uint8' },
+      { name: 'dataHash', type: 'bytes32' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'getLatestDataPointer',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'patient', type: 'address' },
+      { name: 'dataType', type: 'uint8' },
+    ],
+    outputs: [
+      { name: 'dataHash', type: 'bytes32' },
+      { name: 'timestamp', type: 'uint256' },
+      { name: 'version', type: 'uint32' },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'getDataPointerVersion',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'patient', type: 'address' },
+      { name: 'dataType', type: 'uint8' },
+      { name: 'version', type: 'uint32' },
+    ],
+    outputs: [
+      { name: 'dataHash', type: 'bytes32' },
+      { name: 'timestamp', type: 'uint256' },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'getVersionCount',
+    stateMutability: 'view',
+    inputs: [
+      { name: 'patient', type: 'address' },
+      { name: 'dataType', type: 'uint8' },
+    ],
+    outputs: [{ name: '', type: 'uint256' }],
+  },
+  {
+    type: 'event',
+    name: 'DataPointerUpdated',
+    anonymous: false,
+    inputs: [
+      { name: 'patient', type: 'address', indexed: true },
+      { name: 'dataType', type: 'uint8', indexed: true },
+      { name: 'version', type: 'uint32', indexed: false },
+      { name: 'dataHash', type: 'bytes32', indexed: false },
     ],
   },
 ]
