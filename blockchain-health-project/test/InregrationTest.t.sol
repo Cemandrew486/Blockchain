@@ -20,16 +20,16 @@ contract IntegrationTest is Test {
     address patient = address(0x1);
     address requester = address(0x2);
     address doctor = address(0x3);
-    address institute = address(0x4);
+    address owner = address(0x4);
 
     function setUp() public {
-        // Deploy all contracts as the institute account
-        vm.startPrank(institute);
+        // Deploy all contracts as the owner account
+        vm.startPrank(owner);
 
         consent = new ConsentManager();
         dataRegistry = new DataRegistry();
         access = new AccessController(address(consent), address(dataRegistry));
-        identity = new DigitalIdentityRegistry(institute, doctor);
+        identity = new DigitalIdentityRegistry(owner, doctor);
 
         vm.stopPrank(); // Stop impersonating
     }
@@ -41,7 +41,7 @@ contract IntegrationTest is Test {
 
         // 2) Patient grants consent to requester for dataType=1 for 7 days
         vm.prank(patient);
-        consent.setConsent(requester, 1, 7);
+        consent.setConsent(requester, 1,1, 7);
 
         // 3) Patient registers an off-chain data pointer (represented by the keccak256 hash)
         vm.prank(patient);
@@ -49,7 +49,7 @@ contract IntegrationTest is Test {
 
         // 4) Requester accesses patient's latest data for dataType=1 (should succeed)
         vm.prank(requester);
-        (bytes32 hash,,) = access.accessData(patient, 1);
+        (bytes32 hash,,) = access.accessData(patient, 1,1);
         assertEq(hash, keccak256("DATA"));
 
         // 5) Patient revokes consent, invalidating future access attempts
@@ -58,7 +58,7 @@ contract IntegrationTest is Test {
 
         // 6) Requester tries again but now access is denied (returns empty tuple)
         vm.prank(requester);
-        (bytes32 denied,,) = access.accessData(patient, 1);
+        (bytes32 denied,,) = access.accessData(patient, 1,1);
         assertEq(denied, bytes32(0));
     }
 }

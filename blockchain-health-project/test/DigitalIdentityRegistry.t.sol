@@ -8,7 +8,7 @@ contract DigitalIdentityRegistryTest is Test {
     DigitalIdentityRegistry registry;
 
     address owner = address(0x1);
-    address institute = address(0x2);
+    address instituteresearcher = address(0x2);
     address doc = address(0x3);
     address patient = address(0x4);
     address researcher = address(0x5);
@@ -18,12 +18,12 @@ contract DigitalIdentityRegistryTest is Test {
 
     function setUp() public {
         vm.prank(owner);
-        registry = new DigitalIdentityRegistry(institute, doc);
+        registry = new DigitalIdentityRegistry(instituteresearcher, doc);
     }
 
     function test_ConstructorSetsRoles() public view {
         assertEq(registry.owner(), owner);
-        assertEq(registry.instituteResearcher(), institute);
+        assertEq(registry.instituteResearcher(), instituteresearcher);
         assertEq(registry.doctor(), doc);
     }
 
@@ -105,7 +105,7 @@ contract DigitalIdentityRegistryTest is Test {
         address researcher2 = address(0x9);
         bytes32 hashId2 = keccak256("res2");
 
-        vm.prank(institute); // Set msg.sender to institute
+        vm.prank(instituteresearcher); // Set msg.sender to institute
         registry.registerResearcher(researcher2, hashId2); // Register but this time institute.
 
         (

@@ -46,7 +46,6 @@ async function main() {
   const orgAdmin = provider.getSigner(4);
   const insuranceEmployee = provider.getSigner(5);
   const newUserAddressSigner = provider.getSigner(6);
-
   const adminAddr = await admin.getAddress();
   const patientAddr = await patient.getAddress();
   const doctorAddr = await doctor.getAddress();
