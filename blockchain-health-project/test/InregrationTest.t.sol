@@ -31,7 +31,7 @@ contract IntegrationTest is Test {
         access = new AccessController(address(consent), address(dataRegistry));
         identity = new DigitalIdentityRegistry(owner, doctor);
 
-        vm.stopPrank(); // Stop impersonating
+        vm.stopPrank(); 
     }
 
     function test_FullUserWorkflow() public {
@@ -39,7 +39,7 @@ contract IntegrationTest is Test {
         vm.prank(patient);
         identity.registerPatient(keccak256("patient"));
 
-        // 2) Patient grants consent to requester for dataType=1 for 7 days
+        // 2) Patient grants consent to requester for type1 v1 for 7 days
         vm.prank(patient);
         consent.setConsent(requester, 1,1, 7);
 
@@ -47,7 +47,7 @@ contract IntegrationTest is Test {
         vm.prank(patient);
         dataRegistry.setDataPointer(1, keccak256("DATA"));
 
-        // 4) Requester accesses patient's latest data for dataType=1 (should succeed)
+        // 4) Requester accesses patient's latest data for type1 (should succeed)
         vm.prank(requester);
         (bytes32 hash,,) = access.accessData(patient, 1,1);
         assertEq(hash, keccak256("DATA"));
