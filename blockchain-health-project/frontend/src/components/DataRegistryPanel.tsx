@@ -38,7 +38,7 @@ export default function DataRegistryPanel({ account }: Props) {
       setStatus('Transaction sent, waiting for confirmation…')
       await publicClient.waitForTransactionReceipt({ hash })
       
-      setStatus('✅ Data registered successfully!')
+      setStatus('Data registered successfully!')
       setDataContent('')
       
       // Refresh version count
@@ -95,7 +95,7 @@ export default function DataRegistryPanel({ account }: Props) {
 
   return (
     <section>
-      <h2>📋 Data Registry (Patient)</h2>
+      <h2>Data Registry (Patient)</h2>
       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '-0.5rem' }}>
         Register new medical data pointers (hashes) to the blockchain
       </p>
@@ -163,7 +163,7 @@ export default function DataRegistryPanel({ account }: Props) {
           border: '1px solid rgba(59, 130, 246, 0.3)'
         }}>
           <h3 style={{ marginTop: 0, fontSize: '1rem', color: '#60a5fa' }}>
-            📋 Latest Data (Version {latestData.version})
+            Latest Data (Version {latestData.version})
           </h3>
           <div style={{ fontSize: '0.85rem' }}>
             <p style={{ marginBottom: '0.5rem' }}>
@@ -195,7 +195,7 @@ export default function DataRegistryPanel({ account }: Props) {
         fontSize: '0.85rem'
       }}>
         <p style={{ margin: 0, color: '#fbbf24' }}>
-          ℹ️ <strong>Note:</strong> Each registration creates a new version. Grant consent to specific versions to allow authorized parties (doctors, researchers, insurance, etc.) to access them.
+           <strong>Note:</strong> Each registration creates a new version. Grant consent to specific versions to allow authorized parties (doctors, researchers, insurance, etc.) to access them.
         </p>
       </div>
     </section>

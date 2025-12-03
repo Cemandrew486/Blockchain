@@ -39,7 +39,7 @@ function App() {
   if (error) {
     return (
       <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
-        <h1>🏥 Health Data Sharing</h1>
+        <h1>Health Data Sharing</h1>
         <p style={{ color: 'red' }}>{error}</p>
       </div>
     )
@@ -48,7 +48,7 @@ function App() {
   if (!account) {
     return (
       <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
-        <h1>🏥 Health Data Sharing</h1>
+        <h1>Health Data Sharing</h1>
         <p>Connecting to wallet…</p>
       </div>
     )
@@ -57,7 +57,7 @@ function App() {
   return (
     <div className="app-container">
       <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-        <h1>🏥 Health Data Sharing</h1>
+        <h1>Health Data Sharing</h1>
         <p style={{ margin: '0.25rem 0', fontSize: '0.85rem' }}>
           Connected as: <code>{account}</code>
         </p>
@@ -86,7 +86,7 @@ function App() {
             fontSize: '0.95rem'
           }}
         >
-          👤 Patient View
+          Patient View
         </button>
         <button 
           onClick={() => setActiveTab('doctor')}
@@ -99,7 +99,7 @@ function App() {
             fontSize: '0.95rem'
           }}
         >
-          🏥 Requester View
+          Requester View
         </button>
       </div>
 

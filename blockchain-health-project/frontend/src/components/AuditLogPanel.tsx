@@ -45,7 +45,7 @@ export default function AuditLogPanel({ account }: Props) {
   }, [account])
   return (
     <section>
-      <h2>📊 Audit Log</h2>
+      <h2>Audit Log</h2>
       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '-0.5rem' }}>
         Access history for your medical data
       </p>

@@ -101,7 +101,7 @@ export default function IdentityPanel({ account }: Props) {
           marginBottom: '1rem',
           fontSize: '0.9rem'
         }}>
-          <p style={{ margin: 0 }}>⚠️ You are not registered yet. Please register below.</p>
+          <p style={{ margin: 0 }}>You are not registered yet. Please register below.</p>
         </div>
       )}
 

@@ -94,7 +94,7 @@ export default function ConsentPanel({ account }: Props) {
 
   return (
     <section>
-      <h2>🔐 Consent Management (Patient)</h2>
+      <h2>Consent Management (Patient)</h2>
       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '-0.5rem' }}>
         Grant permission for requesters (doctors, researchers, insurance, etc.) to access specific data versions
       </p>
@@ -108,7 +108,7 @@ export default function ConsentPanel({ account }: Props) {
         fontSize: '0.85rem'
       }}>
         <p style={{ margin: 0, color: '#ef4444' }}>
-          ⚠️ <strong>Current Limitation:</strong> You can only grant ONE consent per requester at a time. 
+          <strong>Current Limitation:</strong> You can only grant ONE consent per requester at a time. 
           Granting new consent will replace the previous one.
         </p>
       </div>

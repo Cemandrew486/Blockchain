@@ -26,7 +26,7 @@ export default function DataAccessPanel({ account }: Props) {
         args: [patientAddress as `0x${string}`, account, dataType, dataVersion],
       }) as boolean
       setHasPermission(result)
-      setStatus(result ? '✅ You have permission' : '❌ No permission')
+      setStatus(result ? 'You have permission' : 'No permission')
     } catch (err) {
       console.error(err)
       setStatus('Error checking permission')
@@ -69,13 +69,13 @@ export default function DataAccessPanel({ account }: Props) {
       const [returnedHash, returnedTimestamp, returnedVersion] = result
       
       if (returnedHash === '0x0000000000000000000000000000000000000000000000000000000000000000') {
-        setStatus('❌ Access denied or data not found')
+        setStatus('Access denied or data not found')
         setDataHash(null)
         setTimestamp(null)
       } else {
         setDataHash(returnedHash)
         setTimestamp(new Date(Number(returnedTimestamp) * 1000).toLocaleString())
-        setStatus(`✅ Access granted! Version: ${returnedVersion}`)
+        setStatus(`Access granted! Version: ${returnedVersion}`)
       }
     } catch (err: any) {
       console.error(err)
@@ -124,7 +124,7 @@ export default function DataAccessPanel({ account }: Props) {
 
   return (
     <section>
-      <h2>🔍 Data Access (Requester)</h2>
+      <h2>Data Access (Requester)</h2>
       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '-0.5rem' }}>
         Access patient data if you have valid consent (Doctor, Researcher, Insurance, etc.)
       </p>
@@ -139,7 +139,7 @@ export default function DataAccessPanel({ account }: Props) {
           fontSize: '0.85rem'
         }}>
           <p style={{ margin: 0, color: '#60a5fa' }}>
-            💡 <strong>Viewing your own data:</strong> You still need to grant consent to yourself first. 
+            <strong>Viewing your own data:</strong> You still need to grant consent to yourself first. 
             Switch to Patient View → Consent Management to grant yourself access, then come back here.
           </p>
         </div>
@@ -232,7 +232,7 @@ export default function DataAccessPanel({ account }: Props) {
           border: '1px solid rgba(34, 197, 94, 0.3)'
         }}>
           <h3 style={{ marginTop: 0, fontSize: '1rem', color: 'var(--accent)' }}>
-            📄 Data Retrieved
+            Data Retrieved
           </h3>
           <div style={{ fontSize: '0.85rem' }}>
             <p style={{ marginBottom: '0.5rem' }}>
@@ -258,7 +258,7 @@ export default function DataAccessPanel({ account }: Props) {
             color: 'var(--text-muted)',
             fontStyle: 'italic'
           }}>
-            💡 Use this hash to retrieve the actual medical data from your off-chain database.
+            Use this hash to retrieve the actual medical data from your off-chain database.
           </p>
         </div>
       )}
